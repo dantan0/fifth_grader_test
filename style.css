@@ -1,3 +1,7 @@
+body {
+  background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+}
+
 #game {
     text-align: center;
     font-family: sans-serif;

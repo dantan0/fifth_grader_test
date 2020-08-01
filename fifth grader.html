@@ -78,6 +78,7 @@
                   <div>
                     <div id="level"> Great, now pick and enter a level number: 1. beginner, 2. skilled, 3. master! </div>
                     <input class = "field" onKeyPress={this.inputLevel} onChange = {this.updateLevel} autoFocus={true} value= {this.state.level} />
+                    <div> {this.state.message} </div>
                   </div>
                   );
                 }
@@ -136,11 +137,15 @@
                       tries: 2,
                       message: 'Great! You get 2 tries. You need 10 to win the game'
                   }));
-                } else {
+                } else if (lev === 3) {
                     this.setState(state => ({
                       tries: 0,
                       message: 'Wow. Get ready for a challenge! You have no tries and need 10 to win the game'
                   }));
+                } else {
+                    this.setState(state => ({
+                      message: 'Invalid option. Try again.'
+                    }));
                 }
               }
             }
