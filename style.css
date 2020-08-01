@@ -1,0 +1,61 @@
+#game {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 24px;
+}
+
+#stats {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  text-align: center;
+  width: 75%;
+  margin-left: 15%;
+}
+
+#welcome {
+    font-size: 48px;
+    margin-bottom: 15%;
+}
+
+#problem {
+  margin-top: 10%;
+  font-size: 48px;
+}
+
+#winner {
+    font-size: 72px;
+    color: green;
+}
+
+#loser {
+  font-size: 72px;
+  color: red;
+}
+
+#level {
+  margin-top: 22%;
+}
+
+.incorrect {
+    color: red;
+}
+
+.field {
+  margin-top: 2%;
+  width: 20%;
+}
+
+#skip-but {
+  margin-left: 3%;
+}
+
+#mfade {
+  animation-duration: 5s;
+  animation-name: mfade;
+  opacity: 0%;
+}
+
+@keyframes mfade {
+  0% {opacity: 100%;}
+  100% {opacity: 0%;}
+}

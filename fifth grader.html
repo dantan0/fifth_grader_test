@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Are you smarter than a fifth grader?</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <div id="game" />
+        <script type="text/babel">
+
+            class Game extends React.Component {
+
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        num1: 2,
+                        num2: 1,
+                        wrongs: 0,
+                        tries: 8,
+                        incorrect: false,
+                        response: "",
+                        score: 0,
+                        choice: '',
+                        opsign: '?',
+                        message: '',
+                        level: ''
+                    };
+                }
+
+                render() {
+                    if (this.state.score === 10) {
+                        return this.renderWinnerScreen();
+                    } else if (this.state.opsign === '?'){
+                        return this.renderWelcome();
+                    } else if (this.state.wrongs >= this.state.tries && this.state.wrongs > 0) {
+                        return this.renderLoserScreen();
+                    } else if (this.state.opsign !== '?' && this.state.tries == 8) {
+                        return this.renderLevel();
+                    } else {
+                        return this.renderProblem();
+                    }
+                }
+
+                renderLoserScreen() {
+                  return (
+                    <div>
+                      <div id="loser"> You lost!</div>
+                    </div>
+                  );
+                }
+
+                renderWinnerScreen() {
+                  return (
+                    <div>
+                      <div id="winner">You won!</div>
+                    </div>
+                  );
+                }
+
+                renderWelcome() {
+                  return (
+                  <div>
+                      <div id="welcome"> Are you smarter than a 5th grader?</div>
+                      <div> Pick and enter a math operation first: +, -, *, / </div>
+                      <input class = "field" onKeyPress={this.inputChoice} onChange = {this.updateChoice} autoFocus={true} value = {this.state.choice} />
+                      <div> {this.state.message} </div>
+                  </div>
+                  );
+                }
+
+                renderLevel() {
+                  return (
+                  <div>
+                    <div id="level"> Great, now pick and enter a level number: 1. beginner, 2. skilled, 3. master! </div>
+                    <input class = "field" onKeyPress={this.inputLevel} onChange = {this.updateLevel} autoFocus={true} value= {this.state.level} />
+                  </div>
+                  );
+                }
+
+                renderProblem() {
+                  return (
+                  <div>
+                      <div id = "mfade"> {this.state.message} </div>
+                      <table id = 'stats'>
+                        <tr>
+                          <th>Level: </th>
+                          <th>Score: </th>
+                          <th>Total tries: </th>
+                          <th>Wrong tries: </th>
+                        </tr>
+                        <tr>
+                          <td>{this.state.level} </td>
+                          <td>{this.state.score}</td>
+                          <td>{this.state.tries} </td>
+                          <td>{this.state.wrongs} </td>
+                        </tr>
+                      </table>
+                      <div className={this.state.incorrect ? "incorrect" : ""} id="problem">{this.state.num1} {this.state.opsign} {this.state.num2}</div>
+                      <input onKeyPress={this.inputAnswer} onChange={this.updateResponse} autoFocus={true} value={this.state.response} />
+                      <button id = "skip-but" type="button" class="btn btn-outline-primary" onClick = { () => this.clickSkip() }> Skip </button>
+                  </div>
+                );
+              }
+
+                inputChoice = (event) => {
+                  if (event.key === "Enter") {
+                    if (this.state.choice === '+' || this.state.choice ==='-' || this.state.choice === '*' || this.state.choice === '/') {
+                      this.setState(state => ({
+                        opsign: state.choice,
+                        choice: ''
+                    }));
+                  } else {
+                    this.setState(state => ({
+                      choice: '',
+                      message: 'Invalid option. Try again'
+                    }));
+                  }
+                }
+              }
+
+              inputLevel = (event) => {
+                if (event.key === "Enter") {
+                  const lev = parseInt(this.state.level);
+                  if (lev === 1) {
+                    this.setState(state => ({
+                      tries: 5,
+                      message: 'Nice. You get 5 tries. You need 10 to win the game.'
+                    }));
+                  } else if (lev === 2) {
+                    this.setState(state => ({
+                      tries: 2,
+                      message: 'Great! You get 2 tries. You need 10 to win the game'
+                  }));
+                } else {
+                    this.setState(state => ({
+                      tries: 0,
+                      message: 'Wow. Get ready for a challenge! You have no tries and need 10 to win the game'
+                  }));
+                }
+              }
+            }
+
+                inputAnswer = (event) => {
+                  if (event.key === "Enter") {
+                      const answer = parseInt(this.state.response);
+                      if ((this.state.opsign === '+'& answer === this.state.num1 + this.state.num2)
+                        || (this.state.opsign === '-' & answer === this.state.num1 - this.state.num2)
+                        || (this.state.opsign === '*' & answer === this.state.num1 * this.state.num2)
+                        || (this.state.opsign === '/' & answer === this.state.num1 / this.state.num2))
+                    {
+                      // need to make sure num2 is divisible
+                      var rnum2 = Math.ceil(Math.random() * 10)
+                      var rnum1 = Math.ceil(Math.random() * 10)
+
+                      if (this.state.opsign === '/') {
+                        while (true) {
+                          if (rnum1 % rnum2 == 0) {
+                              break;
+                          } else {
+                              rnum1 = Math.ceil(Math.random() * 30)
+                            continue;
+                          }
+                        }
+                      }
+                          // if the answer is correct
+                          this.setState(state => ({
+                              score: state.score + 1,
+                              response: "",
+                              num1: rnum1,
+                              num2: rnum2,
+                              incorrect: false,
+                          }));
+                      } else {
+                          // if the answer is wrong
+                          this.setState(state => ({
+                              wrongs: state.wrongs + 1,
+                              response: "",
+                              incorrect: true,
+                          }));
+                      }
+                  }
+                }
+
+                updateResponse = (event) => {
+                    this.setState({
+                        response: event.target.value
+                    });
+                }
+
+                updateLevel = (event) => {
+                    this.setState({
+                        level: event.target.value,
+                    });
+                }
+
+                updateChoice = (event) => {
+                    this.setState({
+                        choice: event.target.value
+                    });
+                }
+
+                clickSkip = () => {
+                  this.setState({
+                      num1: Math.ceil(Math.random() * 10),
+                      num2: Math.ceil(Math.random() * 10),
+                      incorrect: false
+                  });
+                }
+
+              }
+
+            ReactDOM.render(<Game />, document.querySelector("#game"));
+        </script>
+    </body>
+</html>
