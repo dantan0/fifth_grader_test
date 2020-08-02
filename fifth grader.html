@@ -12,7 +12,6 @@
     <body>
         <div id="game" />
         <script type="text/babel">
-
             class Game extends React.Component {
 
                 constructor(props) {
@@ -22,9 +21,10 @@
                         num2: 1,
                         wrongs: 0,
                         tries: 8,
+                        score: 0,
+                        restart: false,
                         incorrect: false,
                         response: "",
-                        score: 0,
                         choice: '',
                         opsign: '?',
                         message: '',
@@ -35,21 +35,22 @@
                 render() {
                     if (this.state.score === 10) {
                         return this.renderWinnerScreen();
-                    } else if (this.state.opsign === '?'){
+                    } else if (this.state.opsign === '?' || this.state.restart === true) {
                         return this.renderWelcome();
                     } else if (this.state.wrongs >= this.state.tries && this.state.wrongs > 0) {
                         return this.renderLoserScreen();
                     } else if (this.state.opsign !== '?' && this.state.tries == 8) {
                         return this.renderLevel();
                     } else {
-                        return this.renderProblem();
+                      return this.renderProblem();
                     }
                 }
 
                 renderLoserScreen() {
                   return (
                     <div>
-                      <div id="loser"> You lost!</div>
+                      <div id="loser"> Sorry, you lost!</div>
+                      <button type="button" class="btn btn-outline-primary" onClick = { () => this.clickRestart() }> Restart </button>
                     </div>
                   );
                 }
@@ -57,7 +58,8 @@
                 renderWinnerScreen() {
                   return (
                     <div>
-                      <div id="winner">You won!</div>
+                      <div id="winner">Congrats, you won!</div>
+                      <button type="button" class="btn btn-outline-primary" onClick = { () => this.clickRestart() }> Restart </button>
                     </div>
                   );
                 }
@@ -91,8 +93,8 @@
                         <tr>
                           <th>Level: </th>
                           <th>Score: </th>
-                          <th>Total tries: </th>
-                          <th>Wrong tries: </th>
+                          <th>Total Tries: </th>
+                          <th>Wrong Tries: </th>
                         </tr>
                         <tr>
                           <td>{this.state.level} </td>
@@ -101,7 +103,7 @@
                           <td>{this.state.wrongs} </td>
                         </tr>
                       </table>
-                      <div className={this.state.incorrect ? "incorrect" : ""} id="problem">{this.state.num1} {this.state.opsign} {this.state.num2}</div>
+                      <div className={this.state.incorrect ? "incorrect" : ""} id="problem">{this.state.num1} {this.state.opsign} {this.state.num2} </div>
                       <input id = "answer" onKeyPress={this.inputAnswer} onChange={this.updateResponse} autoFocus={true} value={this.state.response} />
                       <button id = "skip-but" type="button" class="btn btn-outline-primary" onClick = { () => this.clickSkip() }> Skip </button>
                   </div>
@@ -113,13 +115,15 @@
                     if (this.state.choice === '+' || this.state.choice ==='-' || this.state.choice === '*' || this.state.choice === '/') {
                       this.setState(state => ({
                         opsign: state.choice,
-                        choice: ''
+                        choice: '',
+                        restart: false
                     }));
                   } else {
-                    this.setState(state => ({
+                    this.setState({
                       choice: '',
-                      message: 'Invalid option. Try again'
-                    }));
+                      message: 'Invalid option. Try again',
+                      restart: false
+                    });
                   }
                 }
               }
@@ -128,24 +132,24 @@
                 if (event.key === "Enter") {
                   const lev = parseInt(this.state.level);
                   if (lev === 1) {
-                    this.setState(state => ({
+                    this.setState({
                       tries: 5,
                       message: 'Nice. You get 5 tries. You need 10 to win the game.'
-                    }));
+                    });
                   } else if (lev === 2) {
-                    this.setState(state => ({
+                    this.setState({
                       tries: 2,
                       message: 'Great! You get 2 tries. You need 10 to win the game'
-                  }));
+                  });
                 } else if (lev === 3) {
-                    this.setState(state => ({
+                    this.setState({
                       tries: 0,
                       message: 'Wow. Get ready for a challenge! You have no tries and need 10 to win the game'
-                  }));
+                  });
                 } else {
-                    this.setState(state => ({
+                    this.setState({
                       message: 'Invalid option. Try again.'
-                    }));
+                    });
                 }
               }
             }
@@ -182,7 +186,7 @@
                           }));
                       } else {
                           // if the answer is wrong
-                          this.setState(state => ({
+                          this.setState( state => ({
                               wrongs: state.wrongs + 1,
                               response: "",
                               incorrect: true,
@@ -217,6 +221,19 @@
                   });
                 }
 
+                clickRestart = () => {
+                  this.setState ({
+                    restart: true,
+                    incorect: false,
+                    message: '',
+                    wrongs: 0,
+                    level: '',
+                    tries: 8,
+                    score: 0,
+                    num1: 2,
+                    num2: 1
+                  });
+                }
               }
 
             ReactDOM.render(<Game />, document.querySelector("#game"));
