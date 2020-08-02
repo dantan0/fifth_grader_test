@@ -102,7 +102,7 @@
                         </tr>
                       </table>
                       <div className={this.state.incorrect ? "incorrect" : ""} id="problem">{this.state.num1} {this.state.opsign} {this.state.num2}</div>
-                      <input onKeyPress={this.inputAnswer} onChange={this.updateResponse} autoFocus={true} value={this.state.response} />
+                      <input id = "answer" onKeyPress={this.inputAnswer} onChange={this.updateResponse} autoFocus={true} value={this.state.response} />
                       <button id = "skip-but" type="button" class="btn btn-outline-primary" onClick = { () => this.clickSkip() }> Skip </button>
                   </div>
                 );

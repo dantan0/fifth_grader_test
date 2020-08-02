@@ -2,10 +2,15 @@ body {
   background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
 }
 
+@font-face {
+  src: url(landasans-font/LandasansMedium-ALJ6m.otf);
+  font-family: cool;
+}
+
 #game {
     text-align: center;
-    font-family: sans-serif;
-    font-size: 24px;
+    font-size: 36px;
+    font-family: cool
 }
 
 #stats {
@@ -51,6 +56,12 @@ body {
 
 #skip-but {
   margin-left: 3%;
+  font-size: 24px;
+}
+
+#answer {
+  width: 20%;
+  margin-left: 8%;
 }
 
 #mfade {
